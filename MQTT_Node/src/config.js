@@ -1,6 +1,6 @@
 var config = {};
 
-config.host = ": aiqm8773z8kfy.iot.us-east-1.amazonaws.com";
+config.host = "aiqm8773z8kfy.iot.us-east-1.amazonaws.com";
 
 config.privateKey = new Buffer("-----BEGIN RSA PRIVATE KEY-----\n"+
 	"MIIEowIBAAKCAQEApLNWNpwMw3ZWF11zMqxPqC6ylUcjC8X5rez1x30jOrXhQRfQ\n"+

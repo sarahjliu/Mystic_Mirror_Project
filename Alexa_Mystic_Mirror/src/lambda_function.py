@@ -147,9 +147,9 @@ def on_intent(intent_request, session, session_attributes):
     elif intent_name == "pickupLine":
         return get_pickupLine(intent, session, session_attributes)
 
-	#Get easter egg
-	elif intent_name in easterEgg_list:
-		return get_easterEgg(intent, session, session_attributes)
+    #Get easter egg
+    elif intent_name in easterEgg_list:
+            return get_easterEgg(intent, session, session_attributes)
 
     #Get Traffic
     elif intent_name == "traffic":

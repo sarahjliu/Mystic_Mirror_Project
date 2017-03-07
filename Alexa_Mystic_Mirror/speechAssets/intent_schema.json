@@ -1,35 +1,6 @@
 {
   "intents": [
     {
-      "intent": "sms",
-      "slots": [
-        {
-          "name": "Name",
-          "type": "AMAZON.US_FIRST_NAME"
-        },
-        {
-          "name": "Message",
-          "type": "AMAZON.LITERAL"
-        }
-       ]
-    },
-    {"intent": "addcontactname",
-      "slots": [
-        {
-          "name": "Name",
-          "type": "AMAZON.US_FIRST_NAME"
-        }
-       ]
-    },
-    {"intent": "addcontactnumber",
-      "slots": [
-        {
-          "name": "InputNumber",
-          "type": "AMAZON.NUMBER"
-        }
-       ]
-    },
-    {
       "intent": "traffic"
     },
     {
@@ -47,72 +18,13 @@
     {
       "intent": "inspiration"
     }, 
-    {"intent": "sendselfie_publish",
-      "slots": [
-        {
-          "name": "Name",
-          "type": "AMAZON.US_FIRST_NAME"
-        }
-       ]
-    },
     {
       "intent": "commute"
     },
     {
       "intent": "show"
     },
-     {
-      "intent": "teeth"
-    },
-    {
-      "intent": "remind_me",
-      "slots": [
-        {
-          "name": "Reminder",
-          "type": "AMAZON.LITERAL"
-        }
-       ]
-    },
-    {
-      "intent": "remind_me_freq",
-      "slots": [
-        {
-          "name": "Freq",
-          "type": "Frequency"
-        }
-       ]
-    },
-    {
-      "intent": "remind_me_day",
-      "slots": [
-        {
-          "name": "Day",
-          "type": "AMAZON.DATE"
-        }
-       ]
-    },
-    {
-      "intent": "remind_me_time",
-      "slots": [
-        {
-          "name": "Time",
-          "type": "AMAZON.TIME"
-        }
-       ]
-    },            
-    {
-      "intent": "clear_reminders"
-    },
-        {
-      "intent": "delete_reminders",
-      "slots": [
-        {
-          "name": "InputNumber",
-          "type": "AMAZON.NUMBER"
-        }
-       ]
-    },            
-    {
+   {
       "intent": "weather",
       "slots": [
        {

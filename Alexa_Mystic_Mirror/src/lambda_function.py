@@ -31,7 +31,7 @@ s3 = boto3.client('s3')
 
 #user defined variables
 TopicARN = 'arn:aws:sns:us-east-1:421081122729:dynamodb'
-bucket = "<Change this to your bucket name>"
+bucket = "mirrormirrorbucket"
 
 def lambda_handler(event, context):
     """ Route the incoming request based on type (LaunchRequest, IntentRequest,

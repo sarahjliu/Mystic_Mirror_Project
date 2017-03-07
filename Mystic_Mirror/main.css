@@ -13,6 +13,7 @@ body {
   height: calc(100% - 120px);
   width: calc(100% - 120px);
   background: #000;
+  background-color: #000000;
   color: #aaa;
   font-family: "Roboto Condensed", sans-serif;
   font-weight: 400;

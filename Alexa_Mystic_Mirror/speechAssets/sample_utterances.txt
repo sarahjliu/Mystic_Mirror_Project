@@ -1,17 +1,3 @@
-addcontactname add {Name} to contacts
-addcontactname save {Name} as a contact
-addcontactnumber {InputNumber}
-sms tell {Name} to {wake up|Message}
-sms tell {Name} that {we are leaving in ten minutes|Message}
-sms tell {Name} to {come here|Message}
-sms tell {Name} to {come downstairs|Message}
-sms tell {Name} to {do your chores|Message}
-sms tell {Name} to {come home now|Message}
-sms tell {Name} that {dinner is ready|Message}
-sms tell {Name} to {go to bed|Message}
-sms tell {Name} {good morning|Message}
-sms tell {Name} {good night|Message}
-sms tell {Name} {I love you|Message}
 pickupLine tell me a pickup line
 pickupLine give me a pickup line
 pickupLine hit me up with a pickup line
@@ -88,16 +74,3 @@ AMAZON.StopIntent please stop
 show can you show the screen again
 show I missed that
 show show that again
-teeth start teeth timer
-teeth brushing teeth
-remind_me remind me to {take my medicine|Reminder}
-remind_me remind me to {take out the trash|Reminder}
-remind_me remind me to {call home|Reminder}
-remind_me remind me to {set the alarm|Reminder}
-remind_me_day {Day}
-remind_me_time {Time}
-remind_me_freq {Freq}
-clear_reminders clear reminders
-clear_reminders remove reminders
-delete_reminders {InputNumber}
-delete_reminders delete reminders

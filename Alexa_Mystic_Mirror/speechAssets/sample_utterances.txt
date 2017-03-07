@@ -16,6 +16,7 @@ pickupLine tell me a pickup line
 pickupLine give me a pickup line
 pickupLine hit me up with a pickup line
 pickupLine can I get a pickup line
+halQuote open the pod bay doors hal
 weather what is the weather for {City} {State}
 weather what is the weather for {City}
 weather what is the weather in {City} {State}

@@ -107,7 +107,8 @@ def on_intent(intent_request, session, session_attributes):
 
     intent = intent_request['intent']
     intent_name = intent_request['intent']['name']
-
+	easterEgg_list = ["halQuote"] #can add more to array for more easter eggs
+	
     #this logic will force the user to cancel or stop if in a multi-turn request
     if intent_name == "AMAZON.CancelIntent" or intent_name == "AMAZON.StopIntent" or intent_name == "CustomCancel" or intent_name=="SessionEndedRequest":
         return handle_session_end_request()
@@ -178,6 +179,10 @@ def on_intent(intent_request, session, session_attributes):
     #Get pickup line
     elif intent_name == "pickupLine":
         return get_pickupLine(intent, session, session_attributes)
+
+	#Get easter egg
+	elif intent_name in easterEgg_list:
+		return get_easterEgg(intent, session, session_attributes)
 
     #Get Traffic
     elif intent_name == "traffic":
@@ -318,25 +323,43 @@ def get_pickupLine(intent, session, session_attributes):
     reprompt_text = ""
     speech_output = ""
 
-    first_name = ", "
-    if 'first_name' in session_attributes:
-        first_name = session_attributes['first_name'] + first_name
 
     card_title = "Engineering Pickup Lines"
     card_type = 'Simple'
     topic = "display"
     should_end_session = True
 
-    if intent['name'] == "pickupLine":
-        speech_output = lines[hope]
-        card_output = speech_output
-        message = speech_output
-        reprompt_text = speech_output
+    speech_output = lines[hope]
+    card_output = speech_output
+    message = speech_output
+    reprompt_text = speech_output
 
     payload = json.dumps({'intent':'text','message':message})
     return build_response(session_attributes, build_speechlet_response2(
         card_title, speech_output, reprompt_text, should_end_session,card_output, card_type, topic,payload,session_attributes ))
 
+def get_easterEgg(intent, session, session_attributes):
+
+    card_title = "Quote"
+    card_type = 'Simple'
+    topic = "display"
+    should_end_session = True
+
+    reprompt_text = ""
+    speech_output = ""
+
+	if intent['name'] == "halQuote":
+    	speech_output = "I'm sorry, Dave. I'm afraid I can't do that."
+    	card_output = speech_output
+    	message = speech_output
+    	reprompt_text = speech_output
+
+	# could put more things here if you want
+
+	payload = json.dumps({'intent':'text','message':message})
+	
+    return build_response(session_attributes, build_speechlet_response2(
+        card_title, speech_output, reprompt_text, should_end_session,card_output, card_type, topic,payload,session_attributes ))
 
 #Returns the time based on the users location
 def get_time(intent, session, session_attributes):

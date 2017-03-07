@@ -147,6 +147,10 @@ def on_intent(intent_request, session, session_attributes):
     elif intent_name == "inspiration":
         return get_inspiration(intent, session, session_attributes)
 
+    #get an engineering pickup line
+elif intent_name == "pickupLine":
+        return get_pickupLine(intent, session, session_attributes)
+
     #Get the news
     elif intent_name == "news":
         return get_news(intent, session, session_attributes)

@@ -160,7 +160,7 @@ function FormatMessage(message,oldinnerHTML) {
 			else if (obj.intent === "help"){
 				document.getElementById('successdisplay').innerHTML = obj.message;
 			}
-			else if (obj.intent === "quote"){
+			else if (obj.intent === "text"){
 				document.getElementById('successdisplay').innerHTML = obj.message;
 				delaysecs = 15000
 			}

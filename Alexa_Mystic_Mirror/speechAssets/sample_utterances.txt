@@ -12,11 +12,10 @@ sms tell {Name} to {go to bed|Message}
 sms tell {Name} {good morning|Message}
 sms tell {Name} {good night|Message}
 sms tell {Name} {I love you|Message}
-snowwhite on the wall who is the fairest one of all
-snowwhite on the wall who is the fairest of them all
-snowwhite on the wall who's the fairest of them all
-rightsaidfred am I too sexy for this shirt
-zoolander how do I look
+pickupLine tell me a pickup line
+pickupLine give me a pickup line
+pickupLine hit me up with a pickup line
+pickupLine can I get a pickup line
 weather what is the weather for {City} {State}
 weather what is the weather for {City}
 weather what is the weather in {City} {State}

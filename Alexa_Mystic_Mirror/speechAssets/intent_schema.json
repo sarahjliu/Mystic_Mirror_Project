@@ -33,14 +33,8 @@
       "intent": "traffic"
     },
     {
-      "intent": "snowwhite"
+      "intent": "pickupLine"
     },
-    {
-      "intent": "rightsaidfred"
-    }  ,
-    {
-      "intent": "zoolander"
-    }, 
     {
       "intent": "gettime"
     }, 

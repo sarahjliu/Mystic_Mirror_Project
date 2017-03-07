@@ -107,7 +107,6 @@ def on_intent(intent_request, session, session_attributes):
 
     intent = intent_request['intent']
     intent_name = intent_request['intent']['name']
-    quotes_list = ["snowwhite", "rightsaidfred", "zoolander"]
 
     #this logic will force the user to cancel or stop if in a multi-turn request
     if intent_name == "AMAZON.CancelIntent" or intent_name == "AMAZON.StopIntent" or intent_name == "CustomCancel" or intent_name=="SessionEndedRequest":
@@ -176,8 +175,8 @@ def on_intent(intent_request, session, session_attributes):
     elif intent_name == "location" or intent_name == "from_weather":
         return save_location(intent, session, session_attributes)
 
-    #Get easter egg quotes
-    elif intent_name in quotes_list:
+    #Get pickup line
+    elif intent_name == "pickupLine":
         return get_pickupLine(intent, session, session_attributes)
 
     #Get Traffic
@@ -328,25 +327,13 @@ def get_pickupLine(intent, session, session_attributes):
     topic = "display"
     should_end_session = True
 
-    if intent['name'] == "engineering pickup lines":
+    if intent['name'] == "pickupLine":
         speech_output = lines[hope]
         card_output = speech_output
         message = speech_output
         reprompt_text = speech_output
 
-    if intent['name'] == "snowwhite":
-        speech_output = "You are, my dear."
-        card_output = speech_output
-       message = speech_output
-        reprompt_text = speech_output
-
-    if intent['name'] == "zoolander":
-        speech_output = "You look great " + first_name + "but remember, I'm pretty sure there's a lot more to life than being really, really, ridiculously good looking."
-        card_output = speech_output
-        message = speech_output
-        reprompt_text = speech_output
-
-    payload = json.dumps({'intent':'quote','message':message})
+    payload = json.dumps({'intent':'text','message':message})
     return build_response(session_attributes, build_speechlet_response2(
         card_title, speech_output, reprompt_text, should_end_session,card_output, card_type, topic,payload,session_attributes ))
 

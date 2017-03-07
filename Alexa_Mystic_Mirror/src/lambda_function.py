@@ -147,29 +147,9 @@ def on_intent(intent_request, session, session_attributes):
     elif intent_name == "inspiration":
         return get_inspiration(intent, session, session_attributes)
 
-    #get an engineering pickup line
-elif intent_name == "pickupLine":
-        return get_pickupLine(intent, session, session_attributes)
-
     #Get the news
     elif intent_name == "news":
         return get_news(intent, session, session_attributes)
-
-    #Selfie logic
-    elif intent_name == "takeselfie":
-        return take_selfie(intent, session, session_attributes)
-    elif intent_name == "sendselfie_contact":
-        return send_selfie_contact(intent, session, session_attributes)
-    elif intent_name == "sendselfie_publish":
-        return send_selfie_publish(intent, session, session_attributes)
-
-    #Add contact and send message logic
-    elif intent_name == "addcontactname":
-        return add_contact_name(intent, session, session_attributes)
-    elif intent_name == "addcontactnumber":
-        return add_contact_number(intent, session, session_attributes)
-    elif intent_name == "sms":
-        return send_message(intent, session, session_attributes)
 
     #Get the Time
     elif intent_name == "gettime":
@@ -179,7 +159,7 @@ elif intent_name == "pickupLine":
     elif intent_name == "location" or intent_name == "from_weather":
         return save_location(intent, session, session_attributes)
 
-    #Get pickup line
+    #Get engineering pickup line
     elif intent_name == "pickupLine":
         return get_pickupLine(intent, session, session_attributes)
 
@@ -246,16 +226,10 @@ def get_help_response(session_attributes):
                     "\n-how do I look" \
                     "\n-am I too sexy for this shirt" \
                     "\n-who is the fairest of them all" \
-                    "\n\nYou should link your Google account so that I can save your default location. This will help me to provide traffic and weather for you. "\
-                    "\n\nYou can also send a message to someone after saving their contact information. You can do that by telling me to save the name as a contact. " \
-                    "For example, you could say save John as a contact."
     card_type = 'Simple'
     topic = "display"
     message = "This skill will provide information or take actions to help you prepare for your day. " \
                     "You can ask me a number of things, such as 'how do I look', 'what is the weather', 'what is traffic like', or 'what time is it'. " \
-					"<p>You should link your Google account so that I can save your default location. This will help me to provide traffic and weather for you."\
-					"<p>You can also send a message to someone after saving their contact information. You can do that by telling me to save the name as a contact. " \
-					"For example, you could say save John as a contact."
     payload = json.dumps({'intent':'help','message':message})
     reprompt_text = "Ask me 'what is the weather' or 'what is the time'."
     should_end_session = True
@@ -1058,223 +1032,7 @@ def get_news(intent, session, session_attributes):
         card_title, speech_output, reprompt_text, should_end_session,card_output, card_type, topic,payload,session_attributes ))
 
 
-#Adds a contact name to the users contact list
-def add_contact_name(intent, session, session_attributes):
-    """ If we wanted to initialize the session to have some attributes we could
-    add those here
-    """
 
-    if session_attributes['user_linked'] == False:
-        card_title = "Link Account"
-        speech_output = "You must have a linked Google account to use this skill. You can do this from the Home section of the Alexa app."
-        reprompt_text = "Use the Alexa app to link your Google Account with this skill."
-        should_end_session = True
-
-        return build_response(session_attributes, build_speechlet_response(
-        card_title, speech_output, reprompt_text, should_end_session))
-
-    name_to_ping = ""
-    if 'slots' in intent:
-        if 'Name' in intent['slots']:
-            if 'value' in intent['slots']['Name']:
-                name_to_ping = intent['slots']['Name']['value']
-                session_attributes.update({'name_to_ping':name_to_ping})
-
-    if len(name_to_ping) > 0 :
-        speech_output = "Thank you. Now tell me the contact number."
-        reprompt_text = "Thank you. Now tell me the contact number."
-        session_attributes.update({'active_intent_name':'addcontactnumber'})
-        should_end_session = False
-
-    else:
-        speech_output = "I did not understand the name. Please start over by saying 'add name as contact'."
-        reprompt_text = "I did not understand the name. Please start over by saying 'add name as contact'."
-        should_end_session = True
-
-    card_title = "Save Contact Name"
-    return build_response(session_attributes, build_speechlet_response(
-        card_title, speech_output, reprompt_text, should_end_session))
-
-#Adds a contact number to a contact name
-def add_contact_number(intent, session, session_attributes):
-    """ If we wanted to initialize the session to have some attributes we could
-    add those here
-    """
-    if session_attributes['user_linked'] == False:
-        card_title = "Link Account"
-        speech_output = "You must have a linked Google account to use this skill. You can do this from the Home section of the Alexa app."
-        reprompt_text = "Use the Alexa app to link your Google Account with this skill."
-        should_end_session = True
-
-        return build_response(session_attributes, build_speechlet_response(
-        card_title, speech_output, reprompt_text, should_end_session))
-
-    number_to_ping = ""
-    if session.get('attributes', {}) and "active_intent_name" in session.get('attributes', {}):
-        if session['attributes']['active_intent_name'] == "addcontactnumber": #this was routed from the add_name intent, so it is ok to procees
-
-            if 'InputNumber' in intent['slots']:
-                number_to_ping = intent['slots']['InputNumber']['value']
-                session_attributes.update({'number_to_ping':number_to_ping})
-
-            if len(number_to_ping) == 10:
-
-                #create SNS topic
-                response = sns.create_topic(
-                        Name=number_to_ping + "Magic_Mirror"
-                )
-
-                topic_arn = response['TopicArn']
-
-                response = sns.subscribe(
-                    TopicArn=topic_arn,
-                    Protocol='sms',
-                    Endpoint='1'+ number_to_ping
-                )
-
-                details = {}
-                email = session_attributes['email']
-                email_str = {'S' : email}
-                details.update({"Email": email_str})
-
-                number_str = {'S' : number_to_ping}
-                details.update({"ContactNumber": number_str})
-
-                arn_str = {'S' : topic_arn}
-                details.update({"TopicArn": arn_str})
-
-                if session.get('attributes', {}) and "name_to_ping" in session.get('attributes', {}):
-                    if len(session['attributes']['name_to_ping'])>0:
-                        name_str = {'S' : session['attributes']['name_to_ping']}
-                        details.update({"ContactName": name_str})
-
-                response = update_table('Magic_Mirror_Contact',details)
-
-                speech_output = "Thank you. You can now send messages to " + session['attributes']['name_to_ping'] +". For example, you can ask me to tell " + session['attributes']['name_to_ping'] + ", good morning."
-                reprompt_text = speech_output
-                should_end_session = True
-
-            else:
-                speech_output = "The number must be ten digits. Please tell me the phone number again, making sure it is only ten digits."
-                reprompt_text = speech_output
-                should_end_session = False
-                session_attributes.update({'active_intent_name':'addcontactnumber'})
-
-        else:
-            session_attributes = {}
-            card_title = "I Do Not Understand"
-            speech_output = "I did not understand your request. Can you try again, or rephrase."
-            # If the user either does not reply to the welcome message or says something
-            # that is not understood, they will be prompted again with this text.
-            reprompt_text = "I did not understand your request. Can you try again, or rephrase."
-            should_end_session = True
-            return build_response(session_attributes, build_speechlet_response(
-                card_title, speech_output, reprompt_text, should_end_session))
-
-    else:
-        session_attributes = {}
-        card_title = "I Do Not Understand"
-        speech_output = "I did not understand your request. Can you try again, or rephrase."
-        # If the user either does not reply to the welcome message or says something
-        # that is not understood, they will be prompted again with this text.
-        reprompt_text = "I did not understand your request. Can you try again, or rephrase."
-        should_end_session = True
-        return build_response(session_attributes, build_speechlet_response(
-            card_title, speech_output, reprompt_text, should_end_session))
-
-    card_title = "Save Contact Number"
-    return build_response(session_attributes, build_speechlet_response(
-        card_title, speech_output, reprompt_text, should_end_session))
-
-#Sends a mesage to a named contact
-def send_message(intent, session, session_attributes):
-    """ If we wanted to initialize the session to have some attributes we could
-    add those here
-    """
-
-    if session_attributes['user_linked'] == False:
-        card_title = "Link Account"
-        speech_output = "You must have a linked Google account to use this skill. You can do this from the Home section of the Alexa app."
-        reprompt_text = "Use the Alexa app to link your Google Account with this skill."
-        should_end_session = True
-
-        return build_response(session_attributes, build_speechlet_response(
-        card_title, speech_output, reprompt_text, should_end_session))
-
-    card_title = "Send Message"
-    should_end_session = True
-
-    speech_output = ""
-    card_output = ""
-    card_type = 'Simple'
-    topic = "display"
-    message = ""
-    payload = ""
-    reprompt_text = ""
-    name_to_ping = ""
-    message_to_ping = ""
-
-    if 'Name' in intent['slots']:
-        if 'value' in intent['slots']['Name']:
-            name_to_ping = intent['slots']['Name']['value']
-
-    if 'Message' in intent['slots']:
-        if 'value' in intent['slots']['Message']:
-            message_to_ping = intent['slots']['Message']['value']
-
-    if len(name_to_ping) > 0 and len(message_to_ping) > 0 :
-        table = 'Magic_Mirror_Contact'
-        response = dynamodb.get_item(TableName = table,
-            Key={
-                 'Email' : {
-                  "S" : session_attributes['email']
-                },
-                'ContactName' : {
-                  "S" : name_to_ping
-                }
-
-            })
-
-
-        if 'Item' in response:
-
-            if 'TopicArn' in response['Item']:
-
-                sns_message = session_attributes['first_name'] + " says '" + message_to_ping  + "'."
-                response = sns.publish(
-                    TopicArn= response['Item']['TopicArn']['S'],
-                    Message=sns_message)
-
-                speech_output = "The message was sent to " + name_to_ping + "."
-                reprompt_text = "The message was sent to " + name_to_ping + "."
-                card_output = "The message was sent to " + name_to_ping + "."
-                payload = json.dumps({'intent':'message','message':'success','name': name_to_ping, 'details': message_to_ping})
-                should_end_session = True
-            else:
-                speech_output = "There was a problem trying to send a message to this contact. Can you please add or re-create the contact by saying 'add " + name_to_ping + " to contacts'?"
-                reprompt_text = "There was a problem trying to send a message to this contact. Can you please add or re-create the contact by saying 'add " + name_to_ping + " to contacts'?"
-                card_output = "There was a problem trying to send a message to this contact. Can you please add or re-create the contact by saying 'add " + name_to_ping + " to contacts'?"
-                payload = json.dumps({'intent':'message','message':'error','details': card_output})
-                should_end_session = False
-
-        else: #did not find a name
-
-            speech_output = "I did not find the name " + name_to_ping + " in your contact list. If I misheard you, please repeat yourself. Otherwise, please add the contact by saying add " + name_to_ping + " to contacts."
-            reprompt_text = "I did not find the name " + name_to_ping + " in your contact list. If I misheard you, please repeat yourself. Otherwise, please add the contact by saying add " + name_to_ping + " to contacts."
-            card_output = "I did not find the name " + name_to_ping + " in your contact list. If I misheard you, please repeat yourself. Otherwise, please add the contact by saying add " + name_to_ping + " to contacts."
-            payload = json.dumps({'intent':'message','message':'error','details': card_output})
-            should_end_session = False
-
-    else:
-
-        speech_output = "I didnt fully capture the request. Please repeat your request."
-        reprompt_text = "I didnt fully capture the request. Please repeat your request."
-        card_output = "I didnt fully capture the request. Please repeat your request."
-        payload = json.dumps({'intent':'message','message':'error','details': card_output})
-        should_end_session = False
-
-    return build_response(session_attributes, build_speechlet_response2(
-        card_title, speech_output, reprompt_text, should_end_session,card_output, card_type, topic,payload,session_attributes ))
 
 #Returns an inspirational quote
 def get_inspiration (intent, session, session_attributes):

@@ -36,7 +36,7 @@ var accessKey = '<ENTER YOUR ACCESS KEY>';
 var algorithm = 'AWS4-HMAC-SHA256';
 var method = 'GET';
 var canonicalUri = '/mqtt';
-var host = '<ENTER THE HOST ADDRESS - should look like - a6i0a3yz21r4k2.iot.us-east-1.amazonaws.com>'
+var host = 'aiqm8773z8kfy.iot.us-east-1.amazonaws.com'
 
 var credentialScope = dateStamp + '/' + region + '/' + service + '/' + 'aws4_request';
 var canonicalQuerystring = 'X-Amz-Algorithm=AWS4-HMAC-SHA256';

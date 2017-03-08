@@ -74,3 +74,8 @@ AMAZON.StopIntent please stop
 show can you show the screen again
 show I missed that
 show show that again
+meme give me a meme
+meme give me a spicy meme
+meme hit me up with a meme
+meme hit me up with one of those spicy memes
+meme got a good meme

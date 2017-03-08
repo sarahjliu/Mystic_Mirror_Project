@@ -149,8 +149,12 @@ def on_intent(intent_request, session, session_attributes):
 
     #Get easter egg
     elif intent_name in easterEgg_list:
-            return get_easterEgg(intent, session, session_attributes)
+        return get_easterEgg(intent, session, session_attributes)
 
+	#Get meme
+	elif intent_name == "meme":
+		return get_meme(intent, session, session_attributes)
+		
     #Get Traffic
     elif intent_name == "traffic":
         return get_traffic(intent, session, session_attributes)
@@ -1128,7 +1132,26 @@ def show_again(intent, session, session_attributes):
     return build_response(session_attributes, build_speechlet_response2(
         card_title, speech_output, reprompt_text, should_end_session,card_output, card_type, topic,payload,session_attributes ))
 
+def get_meme(intent, session, session_attributes):
 
+	memeNumber = random.random()*2 # replace with number of pics #
+	memeFile["meme0.jpg","meme1.jpg","meme2.png"]
+	
+    card_title = "Spicy Meme"
+    should_end_session = True
+    
+    speech_output = "Here's a spicy meme for you." 
+    card_output = ""
+    card_type = 'Simple'
+    topic = "display"
+    message = "" 
+    reprompt_text = ""
+    
+    payload = json.dumps({'intent':'meme','message':message, 'memeFile':memeFile})
+    
+    return build_response(session_attributes, build_speechlet_response2(
+        card_title, speech_output, reprompt_text, should_end_session,card_output, card_type, topic,payload,session_attributes ))
+        
 #This is called if the request is not understood
 def misunderstood():
     """ If we wanted to initialize the session to have some attributes we could
@@ -1414,3 +1437,5 @@ def get_location(session, intent, session_attributes):
     else:                           #there was an error looking for the location
         loc_status = 4
     return json.dumps({'city':city,'state':state, 'lat':lat, 'lng':lng, 'lat_ne':lat_ne, 'lng_ne':lng_ne,'lat_sw':lat_sw, 'lng_sw':lng_sw,'session_attributes': session_attributes, 'loc_status':int(loc_status)})
+    
+

@@ -130,13 +130,6 @@ function onMessage(message) {
 function FormatMessage(message,oldinnerHTML) {
 		var obj = JSON.parse(message.payloadString)
 		
-	  //Brush Teeth Timer
-	  if (obj.intent == "teeth"){
-			$("#teeth").delay(120000).fadeOut(3000);
-			delaysecs = 120000;
-			setTimeout(Decrement,1000); 			
-		}
-		
 	//Show Reminders in bottom div		
 		else if (obj.intent == "remindersprint"){
 		
@@ -240,54 +233,18 @@ function FormatMessage(message,oldinnerHTML) {
 				document.getElementById('successdisplay').innerHTML = innerHTMLval;
 				delaysecs = 20000
 			}
-	//SEND A MESSAGE
-			else if (obj.intent === "message" && obj.message === 'error'){
-				document.getElementById('successdisplay').innerHTML = obj.details;
-			}
-			else if (obj.intent === "message" && obj.message === 'success'){	
-								
+	//DISPLAY A MEME
+			else if (obj.intent === "meme"){	
+				
 				var innerHTMLval = '<table>' +
 					"<tr>" +
-						"<td class='message_to' colspan=2>Message Sent to " + obj.name + "</td>" +
-					"</tr>" +
-					"<tr>" +
-						"<td class='message_img'><img width=75% src='Images/Chat.png'></td>" +
-						"<td class='message'><i>\"" + obj.details + "\"</i></td>" +
+						"<td class='meme_picture'><img src='Images/" + obj.memeFile + "'></td>" +
 					"</tr>" +
 					"</table>"
 				
 				document.getElementById('successdisplay').innerHTML = innerHTMLval;
 			}
-	//TAKE A SELFIE
-			else if (obj.intent === "takeselfie"){
-					
-				var innerHTMLval = "Hold still. I'm taking your photo now."
-				
-				document.getElementById('successdisplay').innerHTML = innerHTMLval;
-			}
-			else if (obj.intent === "selfie-taken" && obj.message === 'error'){
-					
-				var innerHTMLval = "There was a problem taking the photo. Can you try again?"
-				
-				document.getElementById('successdisplay').innerHTML = innerHTMLval;
-			}
-			else if (obj.intent === "selfie-taken" && obj.message === 'success'){
-				
-				//alert("here")
-				var photo_str = obj.photo.replace("\'", "");
-				var photo_str = photo_str.replace("'", "");
-				var photo_str = photo_str.replace("`", "");
-				
-				var innerHTMLval = '<table>' +
-					"<tr>" +
-						"<td class='message_img'><img src='" + photo_str  + "'></td>" +
-						"<td class='message'>Would you to send this selfie to one of your conatcts?</td>" +
-					"</tr>" +
-					"</table>"
-				
-				document.getElementById('successdisplay').innerHTML = innerHTMLval;
-				delaysecs = 10000
-			}
+
 	//PRINT THE NEWS HEADLINES
 			else if (obj.intent === "news" && obj.message === 'error'){
 					

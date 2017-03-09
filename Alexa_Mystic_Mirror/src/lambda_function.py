@@ -107,7 +107,7 @@ def on_intent(intent_request, session, session_attributes):
 
     intent = intent_request['intent']
     intent_name = intent_request['intent']['name']
-	easterEgg_list = ["halQuote"] #can add more to array for more easter eggs
+    easterEgg_list = ["halQuote"] #can add more to array for more easter eggs
 	
     #this logic will force the user to cancel or stop if in a multi-turn request
     if intent_name == "AMAZON.CancelIntent" or intent_name == "AMAZON.StopIntent" or intent_name == "CustomCancel" or intent_name=="SessionEndedRequest":
@@ -151,8 +151,8 @@ def on_intent(intent_request, session, session_attributes):
     elif intent_name in easterEgg_list:
         return get_easterEgg(intent, session, session_attributes)
 
-	#Get meme
-	elif intent_name == "meme":
+    #Get meme
+    elif intent_name == "meme":
 		return get_meme(intent, session, session_attributes)
 		
     #Get Traffic
@@ -217,11 +217,11 @@ def get_help_response(session_attributes):
                     "\n-inspire me" \
                     "\n-how do I look" \
                     "\n-am I too sexy for this shirt" \
-                    "\n-who is the fairest of them all" \
+                    "\n-who is the fairest of them all" 
     card_type = 'Simple'
     topic = "display"
     message = "This skill will provide information or take actions to help you prepare for your day. " \
-                    "You can ask me a number of things, such as 'how do I look', 'what is the weather', 'what is traffic like', or 'what time is it'. " \
+                    "You can ask me a number of things, such as 'how do I look', 'what is the weather', 'what is traffic like', or 'what time is it'. " 
     payload = json.dumps({'intent':'help','message':message})
     reprompt_text = "Ask me 'what is the weather' or 'what is the time'."
     should_end_session = True
@@ -272,7 +272,7 @@ def get_pickupLine(intent, session, session_attributes):
     "You NP-complete me.",
     "Is your name Wi-fi? Because I'm really feeling a connection. ",
     "Are you a computer keyboard? Because you're my type.",
-    "If Internet Explorer is brave enough to ask you to be your default browser, I’m brave enough to ask you out! ",
+    "If Internet Explorer is brave enough to ask you to be your default browser, I'm brave enough to ask you out! ",
     "I think you could be an integral part of my project life cycle. ",
     "You auto-complete me. ",
     "Girl, you are hotter than the bottom of my laptop. ",
@@ -313,7 +313,7 @@ def get_easterEgg(intent, session, session_attributes):
     reprompt_text = ""
     speech_output = ""
 
-	if intent['name'] == "halQuote":
+    if intent['name'] == "halQuote":
     	speech_output = "I'm sorry, Dave. I'm afraid I can't do that."
     	card_output = speech_output
     	message = speech_output
@@ -1134,8 +1134,8 @@ def show_again(intent, session, session_attributes):
 
 def get_meme(intent, session, session_attributes):
 
-	memeNumber = random.random()*2 # replace with number of pics #
-	memeFile["meme0.jpg","meme1.jpg","meme2.png"]
+    memeNumber = random.random()*2 # replace with number of pics #
+    memeFile["meme0.jpg","meme1.jpg","meme2.png"]
 	
     card_title = "Spicy Meme"
     should_end_session = True

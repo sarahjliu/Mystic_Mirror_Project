@@ -25,14 +25,14 @@
 
  
   
-var email = '<ENTER THE EMAIL ADDRESS YOU USED FOR AUTHENTICATION - in lower case>'  
+var email = 'sarahliu1598@gmail.com'  
 var time = moment.utc();
 var dateStamp = time.format('YYYYMMDD');
 var amzdate = dateStamp + 'T' + time.format('HHmmss') + 'Z';
 var service = 'iotdevicegateway';
 var region = 'us-east-1'; //change the region if you are not using US-East
-var secretKey = '<ENTER YOUR SECRET KEY>';
-var accessKey = '<ENTER YOUR ACCESS KEY>';
+var secretKey = 'AeozstCmrs5cDMPAr64b83hWlna4CDKX/wQOUJNG';
+var accessKey = 'AKIAI5PTIJ3BVWGG6RRQ';
 var algorithm = 'AWS4-HMAC-SHA256';
 var method = 'GET';
 var canonicalUri = '/mqtt';

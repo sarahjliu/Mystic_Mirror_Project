@@ -28,6 +28,11 @@ body {
 	bottom: 0px;
 }
 
+#welcome{
+	position: relative;
+	color: white;
+}
+
 #eohlogo{
 	position: absolute;
 	left: 0px;

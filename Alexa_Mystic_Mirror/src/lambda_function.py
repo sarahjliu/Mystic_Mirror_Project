@@ -651,7 +651,31 @@ def get_weather(intent, session, session_attributes):
     return build_response(session_attributes, build_speechlet_response2(
         card_title, speech_output, reprompt_text, should_end_session,card_output, card_type, topic,payload,session_attributes ))
 
-#create SNS topic
+#Adds a contact number to a contact name
+def add_contact_number(intent, session, session_attributes):
+    """ If we wanted to initialize the session to have some attributes we could
+    add those here
+    """
+    if session_attributes['user_linked'] == False:
+        card_title = "Link Account"
+        speech_output = "You must have a linked Google account to use this skill. You can do this from the Home section of the Alexa app."
+        reprompt_text = "Use the Alexa app to link your Google Account with this skill."
+        should_end_session = True
+    
+        return build_response(session_attributes, build_speechlet_response(
+        card_title, speech_output, reprompt_text, should_end_session)) 
+        
+    number_to_ping = ""
+    if session.get('attributes', {}) and "active_intent_name" in session.get('attributes', {}):
+        if session['attributes']['active_intent_name'] == "addcontactnumber": #this was routed from the add_name intent, so it is ok to procees
+        
+            if 'InputNumber' in intent['slots']:
+                number_to_ping = intent['slots']['InputNumber']['value']
+                session_attributes.update({'number_to_ping':number_to_ping})
+    
+            if len(number_to_ping) == 10:
+                
+                #create SNS topic
                 response = sns.create_topic(
                         Name=number_to_ping + "Magic_Mirror"
                 )
@@ -717,6 +741,96 @@ def get_weather(intent, session, session_attributes):
     card_title = "Save Contact Number"
     return build_response(session_attributes, build_speechlet_response(
         card_title, speech_output, reprompt_text, should_end_session))
+ 
+#Sends a mesage to a named contact
+def send_message(intent, session, session_attributes):
+    """ If we wanted to initialize the session to have some attributes we could
+    add those here
+    """
+    
+    if session_attributes['user_linked'] == False:
+        card_title = "Link Account"
+        speech_output = "You must have a linked Google account to use this skill. You can do this from the Home section of the Alexa app."
+        reprompt_text = "Use the Alexa app to link your Google Account with this skill."
+        should_end_session = True
+    
+        return build_response(session_attributes, build_speechlet_response(
+        card_title, speech_output, reprompt_text, should_end_session)) 
+    
+    card_title = "Send Message"
+    should_end_session = True
+    
+    speech_output = ""
+    card_output = ""
+    card_type = 'Simple'
+    topic = "display"
+    message = ""
+    payload = ""
+    reprompt_text = ""
+    name_to_ping = ""
+    message_to_ping = ""
+
+    if 'Name' in intent['slots']:
+        if 'value' in intent['slots']['Name']:
+            name_to_ping = intent['slots']['Name']['value']
+
+    if 'Message' in intent['slots']:
+        if 'value' in intent['slots']['Message']: 
+            message_to_ping = intent['slots']['Message']['value']
+
+    if len(name_to_ping) > 0 and len(message_to_ping) > 0 :
+        table = 'Magic_Mirror_Contact'
+        response = dynamodb.get_item(TableName = table,
+            Key={
+                 'Email' : {
+                  "S" : session_attributes['email']
+                },
+                'ContactName' : {
+                  "S" : name_to_ping
+                }
+
+            })
+            
+                    
+        if 'Item' in response:
+            
+            if 'TopicArn' in response['Item']:
+
+                sns_message = session_attributes['first_name'] + " says '" + message_to_ping  + "'."
+                response = sns.publish(
+                    TopicArn= response['Item']['TopicArn']['S'],
+                    Message=sns_message)
+                
+                speech_output = "The message was sent to " + name_to_ping + "."
+                reprompt_text = "The message was sent to " + name_to_ping + "."
+                card_output = "The message was sent to " + name_to_ping + "."
+                payload = json.dumps({'intent':'message','message':'success','name': name_to_ping, 'details': message_to_ping})
+                should_end_session = True
+            else:
+                speech_output = "There was a problem trying to send a message to this contact. Can you please add or re-create the contact by saying 'add " + name_to_ping + " to contacts'?"
+                reprompt_text = "There was a problem trying to send a message to this contact. Can you please add or re-create the contact by saying 'add " + name_to_ping + " to contacts'?"
+                card_output = "There was a problem trying to send a message to this contact. Can you please add or re-create the contact by saying 'add " + name_to_ping + " to contacts'?"
+                payload = json.dumps({'intent':'message','message':'error','details': card_output})
+                should_end_session = False
+                
+        else: #did not find a name
+            
+            speech_output = "I did not find the name " + name_to_ping + " in your contact list. If I misheard you, please repeat yourself. Otherwise, please add the contact by saying add " + name_to_ping + " to contacts."
+            reprompt_text = "I did not find the name " + name_to_ping + " in your contact list. If I misheard you, please repeat yourself. Otherwise, please add the contact by saying add " + name_to_ping + " to contacts."
+            card_output = "I did not find the name " + name_to_ping + " in your contact list. If I misheard you, please repeat yourself. Otherwise, please add the contact by saying add " + name_to_ping + " to contacts."
+            payload = json.dumps({'intent':'message','message':'error','details': card_output})
+            should_end_session = False
+    
+    else:        
+        
+        speech_output = "I didnt fully capture the request. Please repeat your request."
+        reprompt_text = "I didnt fully capture the request. Please repeat your request."
+        card_output = "I didnt fully capture the request. Please repeat your request."
+        payload = json.dumps({'intent':'message','message':'error','details': card_output})
+        should_end_session = False
+    
+    return build_response(session_attributes, build_speechlet_response2(
+        card_title, speech_output, reprompt_text, should_end_session,card_output, card_type, topic,payload,session_attributes ))
 
 #Saves the users default location
 def save_location(intent, session, session_attributes):

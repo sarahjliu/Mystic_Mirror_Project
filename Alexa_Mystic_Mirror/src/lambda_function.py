@@ -651,6 +651,73 @@ def get_weather(intent, session, session_attributes):
     return build_response(session_attributes, build_speechlet_response2(
         card_title, speech_output, reprompt_text, should_end_session,card_output, card_type, topic,payload,session_attributes ))
 
+#create SNS topic
+                response = sns.create_topic(
+                        Name=number_to_ping + "Magic_Mirror"
+                )
+                
+                topic_arn = response['TopicArn']
+                
+                response = sns.subscribe(
+                    TopicArn=topic_arn,
+                    Protocol='sms',
+                    Endpoint='1'+ number_to_ping
+                )
+                
+                details = {}
+                email = session_attributes['email']
+                email_str = {'S' : email}
+                details.update({"Email": email_str})
+                
+                number_str = {'S' : number_to_ping}
+                details.update({"ContactNumber": number_str})
+                
+                arn_str = {'S' : topic_arn}
+                details.update({"TopicArn": arn_str})
+                
+                if session.get('attributes', {}) and "name_to_ping" in session.get('attributes', {}):        
+                    if len(session['attributes']['name_to_ping'])>0:
+                        name_str = {'S' : session['attributes']['name_to_ping']}
+                        details.update({"ContactName": name_str})
+                
+                response = update_table('Magic_Mirror_Contact',details)
+                 
+                speech_output = "Thank you. You can now send messages to " + session['attributes']['name_to_ping'] +". For example, you can ask me to tell " + session['attributes']['name_to_ping'] + ", good morning."
+                reprompt_text = speech_output
+                should_end_session = True
+        
+            else:
+                speech_output = "The number must be ten digits. Please tell me the phone number again, making sure it is only ten digits."
+                reprompt_text = speech_output
+                should_end_session = False
+                session_attributes.update({'active_intent_name':'addcontactnumber'})
+                
+        else:
+            session_attributes = {}
+            card_title = "I Do Not Understand" 
+            speech_output = "I did not understand your request. Can you try again, or rephrase."
+            # If the user either does not reply to the welcome message or says something
+            # that is not understood, they will be prompted again with this text.
+            reprompt_text = "I did not understand your request. Can you try again, or rephrase."
+            should_end_session = True
+            return build_response(session_attributes, build_speechlet_response(
+                card_title, speech_output, reprompt_text, should_end_session))
+
+    else:
+        session_attributes = {}
+        card_title = "I Do Not Understand" 
+        speech_output = "I did not understand your request. Can you try again, or rephrase."
+        # If the user either does not reply to the welcome message or says something
+        # that is not understood, they will be prompted again with this text.
+        reprompt_text = "I did not understand your request. Can you try again, or rephrase."
+        should_end_session = True
+        return build_response(session_attributes, build_speechlet_response(
+            card_title, speech_output, reprompt_text, should_end_session))
+    
+    card_title = "Save Contact Number"
+    return build_response(session_attributes, build_speechlet_response(
+        card_title, speech_output, reprompt_text, should_end_session))
+
 #Saves the users default location
 def save_location(intent, session, session_attributes):
 

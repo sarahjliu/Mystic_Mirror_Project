@@ -1166,7 +1166,7 @@ def misunderstood():
 #This is called to end the session
 def handle_session_end_request():
     card_title = "Session Ended"
-    speech_output = "Thank you for using the Mystic Mirror skill. " \
+    speech_output = "Thank you for using WECE's Magical Mirror. " \
                     "Have a nice day!"
     # Setting this to true ends the session and exits the skill.
     should_end_session = True

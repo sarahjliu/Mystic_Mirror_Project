@@ -28,6 +28,12 @@ body {
 	bottom: 0px;
 }
 
+#eohlogo{
+	position: absolute;
+	left: 0px;
+	top: 0px;
+}
+
 li{
 	margin: 0 0 3px 0;
 }

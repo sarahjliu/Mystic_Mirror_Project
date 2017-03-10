@@ -1,8 +1,4 @@
 """
-Darian Johnson
-http://darianbjohnson.com
-
-This is the main function for the mystic mirror skill.
 This skill takes the users intent and, in addition to replying, sends a message, via SNS, to a second lamba function.
 The second lambda function sends details, via mgtt, to the physical device (raspberry pi)
 """
@@ -30,7 +26,7 @@ sns = boto3.client('sns')
 s3 = boto3.client('s3')
 
 #user defined variables
-TopicARN = 'arn:aws:sns:us-east-1:421081122729:dynamodb'
+TopicARN = 'arn:aws:sns:us-east-1:421081122729:Magic_Mirror_MQTT'
 bucket = "mirrormirrorbucket"
 
 def lambda_handler(event, context):
@@ -187,7 +183,7 @@ def on_session_ended(session_ended_request, session):
 def get_welcome_response(session_attributes):
 
     card_title = "Welcome"
-    speech_output = "Welcome to the Mystic Mirror skill. This skill will provide information or take actions to help you prepare for your day. " \
+    speech_output = "Welcome to the WECE Mirror Mirror on the Wall. This skill will provide information or take actions to help you prepare for your day. " \
                     "You can ask me,'how do I look, or 'what is the weather'. For more help, say 'help'."
     card_output = "Welcome to the Mystic Mirror skill. This skill will provide information or take actions to help you prepare for your day. " \
                     "You can ask me: \n How do I look?\n What is the weather?\n Tell John to get ready for school.\n What is traffic like?\n\n For more help, say 'help'."

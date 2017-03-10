@@ -41,9 +41,9 @@ def lambda_handler(event, context):
     prevent someone else from configuring a skill that sends requests to this
     function.
     """
-    if (event['session']['application']['applicationId'] !=
-             "<Enter Your App ID>"):
-         return wrong_AppID()
+    #if (event['session']['application']['applicationId'] !=
+    #         "<Enter Your App ID>"):
+    #     return wrong_AppID()
 
 
     if event['session']['new']:
@@ -101,10 +101,19 @@ def on_intent(intent_request, session, session_attributes):
           ", sessionId=" + session['sessionId'])
 
 
+    session_attributes['city'] = "URBANA"
+    session_attributes['state'] = "ILLINOIS"
+    session_attributes['saved_location'] = True
+    session_attributes['email'] = 'sarahjliu1598@gmail.com'
+    session_attributes.update({'user_linked' :True})
+    session_attributes.update({'saved_location' :True})
+    session_attributes.update({'IOTEnabled' :True})
+
+
     intent = intent_request['intent']
     intent_name = intent_request['intent']['name']
     easterEgg_list = ["halQuote"] #can add more to array for more easter eggs
-	
+
     #this logic will force the user to cancel or stop if in a multi-turn request
     if intent_name == "AMAZON.CancelIntent" or intent_name == "AMAZON.StopIntent" or intent_name == "CustomCancel" or intent_name=="SessionEndedRequest":
         return handle_session_end_request()
@@ -149,8 +158,8 @@ def on_intent(intent_request, session, session_attributes):
 
     #Get meme
     elif intent_name == "meme":
-		return get_meme(intent, session, session_attributes)
-		
+return get_meme(intent, session, session_attributes)
+
     #Get Traffic
     elif intent_name == "traffic":
         return get_traffic(intent, session, session_attributes)
@@ -253,7 +262,7 @@ def wrong_AppID():
 #Returns engineering pickup line
 def get_pickupLine(intent, session, session_attributes):
     #24 elements
-    lines["Since distance equals velocity times time, let's let velocity and time approach infinity, because I want to go all the way with you.",
+    lines = ["Since distance equals velocity times time, let's let velocity and time approach infinity, because I want to go all the way with you.",
     "You and I would add up better than a Riemann sum.",
     "I wish I were your derivative so I could lie tangent to your curves.",
     "Were your parents engineers? Because you have a nice design.",
@@ -290,7 +299,7 @@ def get_pickupLine(intent, session, session_attributes):
     topic = "display"
     should_end_session = True
 
-    speech_output = lines[hope]
+    speech_output = lines[int(hope)]
     card_output = speech_output
     message = speech_output
     reprompt_text = speech_output
@@ -310,15 +319,15 @@ def get_easterEgg(intent, session, session_attributes):
     speech_output = ""
 
     if intent['name'] == "halQuote":
-    	speech_output = "I'm sorry, Dave. I'm afraid I can't do that."
-    	card_output = speech_output
-    	message = speech_output
-    	reprompt_text = speech_output
+    speech_output = "I'm sorry, Dave. I'm afraid I can't do that."
+    card_output = speech_output
+    message = speech_output
+    reprompt_text = speech_output
 
-	# could put more things here if you want
+# could put more things here if you want
 
-	payload = json.dumps({'intent':'text','message':message})
-	
+payload = json.dumps({'intent':'text','message':message})
+
     return build_response(session_attributes, build_speechlet_response2(
         card_title, speech_output, reprompt_text, should_end_session,card_output, card_type, topic,payload,session_attributes ))
 
@@ -1167,7 +1176,7 @@ def get_news(intent, session, session_attributes):
     URL="https://api.cognitive.microsoft.com/bing/v5.0/news/"
     req = urllib2.Request(URL)
     req.add_header('Content-Type', 'application/x-www-form-urlencoded')
-    req.add_header('Ocp-Apim-Subscription-Key', '5d66630076364f68b3f2c79df531b1e8')
+    req.add_header('Ocp-Apim-Subscription-Key', '69b1574fa94845009c8467846c5e7045')
 
     #Fire off the request
     try:
@@ -1312,8 +1321,8 @@ def show_again(intent, session, session_attributes):
 def get_meme(intent, session, session_attributes):
 
     memeNumber = random.random()*2 # replace with number of pics #
-    memeFile["meme0.jpg","meme1.jpg","meme2.png"]
-	
+    memeFile = ["meme0.jpg","meme1.jpg","meme2.png"]
+
     card_title = "Spicy Meme"
     should_end_session = True
     
@@ -1615,4 +1624,5 @@ def get_location(session, intent, session_attributes):
         loc_status = 4
     return json.dumps({'city':city,'state':state, 'lat':lat, 'lng':lng, 'lat_ne':lat_ne, 'lng_ne':lng_ne,'lat_sw':lat_sw, 'lng_sw':lng_sw,'session_attributes': session_attributes, 'loc_status':int(loc_status)})
     
+
 
